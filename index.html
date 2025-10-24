@@ -47,19 +47,37 @@
             font-size: 14px;
         }
 
+        .sync-status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            margin-top: 8px;
+        }
+
+        .sync-status.online {
+            background: #D1FAE5;
+            color: #065F46;
+        }
+
+        .sync-status.offline {
+            background: #FEE2E2;
+            color: #991B1B;
+        }
+
         .tab-buttons {
-            display: flex;
-            gap: 10px;
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
             margin-bottom: 20px;
         }
 
         .tab-btn {
-            flex: 1;
-            padding: 12px;
+            padding: 10px 5px;
             background: white;
             border: none;
             border-radius: 12px;
-            font-size: 14px;
+            font-size: 12px;
             font-weight: 600;
             color: #6B7280;
             cursor: pointer;
@@ -117,6 +135,12 @@
             box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
         }
 
+        .input-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
         .btn {
             width: 100%;
             padding: 14px;
@@ -142,6 +166,11 @@
 
         .btn-secondary {
             background: linear-gradient(135deg, #6B7280 0%, #4B5563 100%);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
 
         .customer-list {
@@ -175,6 +204,13 @@
             font-size: 13px;
             color: #6B7280;
             margin-bottom: 3px;
+        }
+
+        .customer-money {
+            font-size: 14px;
+            color: #10B981;
+            font-weight: 600;
+            margin-top: 5px;
         }
 
         .stamps-container {
@@ -319,25 +355,6 @@
             color: #6B7280;
         }
 
-        .alert {
-            padding: 12px 16px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            font-size: 14px;
-        }
-
-        .alert-success {
-            background: #D1FAE5;
-            color: #065F46;
-            border: 2px solid #10B981;
-        }
-
-        .alert-error {
-            background: #FEE2E2;
-            color: #991B1B;
-            border: 2px solid #EF4444;
-        }
-
         .empty-state {
             text-align: center;
             padding: 40px 20px;
@@ -355,6 +372,101 @@
             gap: 10px;
             margin-top: 15px;
         }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #6B7280;
+        }
+
+        .loading-spinner {
+            border: 4px solid #E5E7EB;
+            border-top: 4px solid #8B5CF6;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .ranking-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: #F9FAFB;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            transition: all 0.3s;
+        }
+
+        .ranking-item:hover {
+            background: #F3F4F6;
+            transform: translateX(5px);
+        }
+
+        .ranking-medal {
+            font-size: 32px;
+            margin-right: 15px;
+            min-width: 40px;
+        }
+
+        .ranking-info {
+            flex: 1;
+        }
+
+        .ranking-name {
+            font-weight: 600;
+            color: #1F2937;
+            font-size: 16px;
+            margin-bottom: 3px;
+        }
+
+        .ranking-details {
+            font-size: 13px;
+            color: #6B7280;
+        }
+
+        .ranking-amount {
+            font-size: 20px;
+            font-weight: 700;
+            color: #10B981;
+        }
+
+        .month-selector {
+            margin-bottom: 20px;
+        }
+
+        .info-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            background: #F3F4F6;
+            border-radius: 8px;
+            font-size: 13px;
+            color: #6B7280;
+            margin-right: 8px;
+            margin-bottom: 5px;
+        }
+
+        .edit-btn {
+            background: #F59E0B;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .edit-btn:hover {
+            background: #D97706;
+        }
     </style>
 </head>
 <body>
@@ -362,13 +474,20 @@
         <div class="header">
             <h1>🍇 CONNECT</h1>
             <p>Customer Manager</p>
+            <div id="syncStatus" class="sync-status online">🔄 Synced</div>
         </div>
 
         <div class="tab-buttons">
-            <button class="tab-btn active" onclick="switchTab('customers')">👥 Customers</button>
-            <button class="tab-btn" onclick="switchTab('add')">➕ Add New</button>
-            <button class="tab-btn" onclick="switchTab('broadcast')">📢 Broadcast</button>
-            <button class="tab-btn" onclick="switchTab('backup')">💾 Backup</button>
+            <button class="tab-btn active" onclick="switchTab('customers')">👥</button>
+            <button class="tab-btn" onclick="switchTab('add')">➕</button>
+            <button class="tab-btn" onclick="switchTab('analytics')">📊</button>
+            <button class="tab-btn" onclick="switchTab('broadcast')">📢</button>
+            <button class="tab-btn" onclick="switchTab('backup')">💾</button>
+        </div>
+
+        <div id="loadingScreen" class="card loading" style="display: none;">
+            <div class="loading-spinner"></div>
+            <p>Loading data...</p>
         </div>
 
         <!-- Customers Tab -->
@@ -407,7 +526,41 @@
                     <label>Telegram Phone Number *</label>
                     <input type="tel" id="newCustomerPhone" placeholder="+855 12 345 678">
                 </div>
-                <button class="btn" onclick="addNewCustomer()">Add Customer</button>
+                <div class="input-row">
+                    <div class="input-group">
+                        <label>Gender</label>
+                        <select id="newCustomerGender">
+                            <option value="">Not specified</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>Age Group</label>
+                        <select id="newCustomerAge">
+                            <option value="">Not specified</option>
+                            <option value="10s">10s</option>
+                            <option value="20s">20s</option>
+                            <option value="30s">30s</option>
+                            <option value="40s">40s</option>
+                            <option value="50s">50s</option>
+                            <option value="60+">60+</option>
+                        </select>
+                    </div>
+                </div>
+                <button class="btn" onclick="addNewCustomer()" id="addCustomerBtn">Add Customer</button>
+            </div>
+        </div>
+
+        <!-- Analytics Tab -->
+        <div id="analytics" class="tab-content">
+            <div class="card">
+                <h2 style="margin-bottom: 20px; color: #1F2937;">📊 Monthly Top 5 Customers</h2>
+                <div class="input-group month-selector">
+                    <label>Select Month</label>
+                    <input type="month" id="monthSelector" onchange="updateTop5()">
+                </div>
+                <div id="top5List"></div>
             </div>
         </div>
 
@@ -425,7 +578,7 @@
                         This will send to <strong id="recipientCount">0</strong> customers
                     </p>
                 </div>
-                <button class="btn" onclick="sendBroadcast()">📤 Send Broadcast</button>
+                <button class="btn" onclick="sendBroadcast()" id="broadcastBtn">📤 Send Broadcast</button>
             </div>
         </div>
 
@@ -434,19 +587,21 @@
             <div class="card">
                 <h2 style="margin-bottom: 20px; color: #1F2937;">Data Backup</h2>
                 <p style="color: #6B7280; margin-bottom: 20px; font-size: 14px;">
-                    Regularly backup your customer data to prevent data loss.
+                    Your data is automatically synced to Firebase Cloud. You can also download a local backup.
                 </p>
-                <button class="btn" onclick="exportData()">💾 Download Backup</button>
+                <button class="btn" onclick="exportData()">💾 Download Local Backup</button>
                 <button class="btn btn-secondary" onclick="document.getElementById('importFile').click()" style="margin-top: 10px;">📥 Restore from Backup</button>
                 <input type="file" id="importFile" accept=".json" style="display: none;" onchange="importData(event)">
             </div>
 
             <div class="card">
-                <h3 style="margin-bottom: 15px; color: #1F2937; font-size: 18px;">Auto Backup</h3>
+                <h3 style="margin-bottom: 15px; color: #1F2937; font-size: 18px;">Cloud Sync Status</h3>
                 <p style="color: #6B7280; margin-bottom: 15px; font-size: 14px;">
-                    Last backup: <strong id="lastBackup">Never</strong>
+                    All data is automatically backed up to Firebase Cloud in real-time.
                 </p>
-                <button class="btn btn-secondary" onclick="enableAutoBackup()">Enable Auto Backup</button>
+                <div id="cloudSyncInfo" style="padding: 12px; background: #F9FAFB; border-radius: 8px; font-size: 14px; color: #6B7280;">
+                    ✅ Cloud sync enabled
+                </div>
             </div>
         </div>
     </div>
@@ -463,9 +618,43 @@
                 <p style="color: #6B7280; font-size: 14px; margin-bottom: 5px;">
                     📞 <span id="modalCustomerPhone"></span>
                 </p>
+                <p style="color: #6B7280; font-size: 14px; margin-bottom: 5px;">
+                    <span id="modalCustomerGenderAge"></span>
+                </p>
+                <p style="color: #10B981; font-size: 16px; font-weight: 600; margin-top: 8px;">
+                    💰 Total Spent: $<span id="modalCustomerTotal">0.00</span>
+                </p>
                 <p style="color: #6B7280; font-size: 14px;">
                     📅 Joined: <span id="modalCustomerJoined"></span>
                 </p>
+                <button class="edit-btn" onclick="showEditCustomerForm()">✏️ Edit Info</button>
+            </div>
+
+            <div id="editCustomerForm" style="display: none; margin-bottom: 20px; padding: 15px; background: #F9FAFB; border-radius: 12px;">
+                <h3 style="margin-bottom: 15px; color: #1F2937; font-size: 16px;">Edit Customer Info</h3>
+                <div class="input-row">
+                    <div class="input-group">
+                        <label>Gender</label>
+                        <select id="editGender">
+                            <option value="">Not specified</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>Age Group</label>
+                        <select id="editAge">
+                            <option value="">Not specified</option>
+                            <option value="10s">10s</option>
+                            <option value="20s">20s</option>
+                            <option value="30s">30s</option>
+                            <option value="40s">40s</option>
+                            <option value="50s">50s</option>
+                            <option value="60+">60+</option>
+                        </select>
+                    </div>
+                </div>
+                <button class="btn" onclick="saveCustomerEdit()" style="margin-top: 10px;">Save Changes</button>
             </div>
 
             <h3 style="margin-bottom: 15px; color: #1F2937; font-size: 18px;">Stamp Card</h3>
@@ -496,21 +685,108 @@
         </div>
     </div>
 
-    <script>
-        const BOT_TOKEN = '8280988484:AAF35cs0TLiNIWACrV5zRy89OoUEVLf_xdM';
-        let customers = [];
-        let currentCustomer = null;
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, onSnapshot, query, orderBy } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
-        // Load data on start
-        window.onload = function() {
-            loadData();
-            displayCustomers();
-            updateStats();
-            updateRecipientCount();
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyB7OHGDwqnfeumXOSUVyR7N_1EjSSh461o",
+            authDomain: "connect-acai-app.firebaseapp.com",
+            projectId: "connect-acai-app",
+            storageBucket: "connect-acai-app.firebasestorage.app",
+            messagingSenderId: "1011684849253",
+            appId: "1:1011684849253:web:09c6960ea0b851850d788c"
         };
 
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Global variables
+        window.db = db;
+        window.customersCollection = collection(db, 'customers');
+        window.customers = [];
+        window.currentCustomer = null;
+        window.unsubscribe = null;
+
+        const BOT_TOKEN = '8280988484:AAF35cs0TLiNIWACrV5zRy89OoUEVLf_xdM';
+
+        // Load data on start
+        window.onload = async function() {
+            showLoading(true);
+            await loadCustomersFromFirebase();
+            updateStats();
+            updateRecipientCount();
+            updateSyncStatus(true);
+            initializeMonthSelector();
+            showLoading(false);
+        };
+
+        // Initialize month selector with current month
+        function initializeMonthSelector() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            document.getElementById('monthSelector').value = `${year}-${month}`;
+        }
+
+        // Show/hide loading screen
+        function showLoading(show) {
+            document.getElementById('loadingScreen').style.display = show ? 'block' : 'none';
+        }
+
+        // Calculate total spent for a customer
+        function calculateTotalSpent(customer) {
+            if (!customer.visits || customer.visits.length === 0) return 0;
+            return customer.visits.reduce((total, visit) => total + (visit.amount || 0), 0);
+        }
+
+        // Load customers from Firebase with real-time updates
+        async function loadCustomersFromFirebase() {
+            try {
+                const q = query(window.customersCollection, orderBy('joinedDate', 'desc'));
+                
+                window.unsubscribe = onSnapshot(q, (snapshot) => {
+                    window.customers = [];
+                    snapshot.forEach((doc) => {
+                        const data = doc.data();
+                        window.customers.push({
+                            firestoreId: doc.id,
+                            ...data,
+                            totalSpent: calculateTotalSpent(data)
+                        });
+                    });
+                    displayCustomers();
+                    updateStats();
+                    updateRecipientCount();
+                    updateTop5();
+                    updateSyncStatus(true);
+                }, (error) => {
+                    console.error('Error loading customers:', error);
+                    updateSyncStatus(false);
+                });
+            } catch (error) {
+                console.error('Error setting up listener:', error);
+                updateSyncStatus(false);
+            }
+        }
+
+        // Update sync status indicator
+        function updateSyncStatus(isOnline) {
+            const statusEl = document.getElementById('syncStatus');
+            if (isOnline) {
+                statusEl.className = 'sync-status online';
+                statusEl.textContent = '🔄 Synced';
+            } else {
+                statusEl.className = 'sync-status offline';
+                statusEl.textContent = '⚠️ Offline';
+            }
+        }
+
         // Tab switching
-        function switchTab(tabName) {
+        window.switchTab = function(tabName) {
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
             
@@ -519,45 +795,62 @@
 
             if (tabName === 'broadcast') {
                 updateRecipientCount();
+            } else if (tabName === 'analytics') {
+                updateTop5();
             }
-        }
+        };
 
         // Add new customer
-        function addNewCustomer() {
+        window.addNewCustomer = async function() {
             const name = document.getElementById('newCustomerName').value.trim();
             const phone = document.getElementById('newCustomerPhone').value.trim();
+            const gender = document.getElementById('newCustomerGender').value;
+            const age = document.getElementById('newCustomerAge').value;
+            const btn = document.getElementById('addCustomerBtn');
 
             if (!name || !phone) {
-                alert('Please fill in all required fields');
+                alert('Please fill in name and phone number');
                 return;
             }
 
-            const customer = {
-                id: Date.now(),
-                name: name,
-                phone: phone,
-                stamps: 0,
-                joinedDate: new Date().toISOString(),
-                visits: []
-            };
+            btn.disabled = true;
+            btn.textContent = 'Adding...';
 
-            customers.push(customer);
-            saveData();
-            displayCustomers();
-            updateStats();
+            try {
+                const customer = {
+                    id: Date.now(),
+                    name: name,
+                    phone: phone,
+                    gender: gender,
+                    age: age,
+                    stamps: 0,
+                    joinedDate: new Date().toISOString(),
+                    visits: []
+                };
 
-            document.getElementById('newCustomerName').value = '';
-            document.getElementById('newCustomerPhone').value = '';
+                await addDoc(window.customersCollection, customer);
 
-            alert('✅ Customer added successfully!');
-            switchTab('customers');
-        }
+                document.getElementById('newCustomerName').value = '';
+                document.getElementById('newCustomerPhone').value = '';
+                document.getElementById('newCustomerGender').value = '';
+                document.getElementById('newCustomerAge').value = '';
+
+                alert('✅ Customer added successfully!');
+                switchTab('customers');
+            } catch (error) {
+                console.error('Error adding customer:', error);
+                alert('❌ Error adding customer. Please try again.');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Add Customer';
+            }
+        };
 
         // Display customers
-        function displayCustomers() {
+        window.displayCustomers = function() {
             const container = document.getElementById('customersList');
             
-            if (customers.length === 0) {
+            if (window.customers.length === 0) {
                 container.innerHTML = `
                     <div class="empty-state">
                         <div class="empty-state-icon">👥</div>
@@ -567,42 +860,60 @@
                 return;
             }
 
-            container.innerHTML = customers.map(customer => `
-                <div class="customer-item" onclick="openCustomerDetail(${customer.id})">
-                    <div class="customer-name">${customer.name}</div>
-                    <div class="customer-info">📞 ${customer.phone}</div>
-                    <div class="customer-info">🍇 ${customer.stamps} stamps | 📅 ${customer.visits.length} visits</div>
-                </div>
-            `).join('');
-        }
+            container.innerHTML = window.customers.map(customer => {
+                const genderAge = [customer.gender, customer.age].filter(Boolean).join(', ') || 'No info';
+                return `
+                    <div class="customer-item" onclick="openCustomerDetail('${customer.firestoreId}')">
+                        <div class="customer-name">${customer.name}</div>
+                        <div class="customer-info">📞 ${customer.phone} | ${genderAge}</div>
+                        <div class="customer-info">🍇 ${customer.stamps} stamps | 📅 ${customer.visits.length} visits</div>
+                        <div class="customer-money">💰 Total: $${customer.totalSpent.toFixed(2)}</div>
+                    </div>
+                `;
+            }).join('');
+        };
 
         // Search customers
-        function searchCustomers() {
+        window.searchCustomers = function() {
             const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            const filtered = customers.filter(c => c.name.toLowerCase().includes(searchTerm));
+            const filtered = window.customers.filter(c => c.name.toLowerCase().includes(searchTerm));
             
             const container = document.getElementById('customersList');
-            container.innerHTML = filtered.map(customer => `
-                <div class="customer-item" onclick="openCustomerDetail(${customer.id})">
-                    <div class="customer-name">${customer.name}</div>
-                    <div class="customer-info">📞 ${customer.phone}</div>
-                    <div class="customer-info">🍇 ${customer.stamps} stamps | 📅 ${customer.visits.length} visits</div>
-                </div>
-            `).join('');
-        }
+            container.innerHTML = filtered.map(customer => {
+                const genderAge = [customer.gender, customer.age].filter(Boolean).join(', ') || 'No info';
+                return `
+                    <div class="customer-item" onclick="openCustomerDetail('${customer.firestoreId}')">
+                        <div class="customer-name">${customer.name}</div>
+                        <div class="customer-info">📞 ${customer.phone} | ${genderAge}</div>
+                        <div class="customer-info">🍇 ${customer.stamps} stamps | 📅 ${customer.visits.length} visits</div>
+                        <div class="customer-money">💰 Total: $${customer.totalSpent.toFixed(2)}</div>
+                    </div>
+                `;
+            }).join('');
+        };
 
         // Open customer detail modal
-        function openCustomerDetail(customerId) {
-            currentCustomer = customers.find(c => c.id === customerId);
-            if (!currentCustomer) return;
+        window.openCustomerDetail = function(firestoreId) {
+            window.currentCustomer = window.customers.find(c => c.firestoreId === firestoreId);
+            if (!window.currentCustomer) return;
 
-            document.getElementById('modalCustomerName').textContent = currentCustomer.name;
-            document.getElementById('modalCustomerPhone').textContent = currentCustomer.phone;
-            document.getElementById('modalCustomerJoined').textContent = new Date(currentCustomer.joinedDate).toLocaleDateString();
+            document.getElementById('modalCustomerName').textContent = window.currentCustomer.name;
+            document.getElementById('modalCustomerPhone').textContent = window.currentCustomer.phone;
+            document.getElementById('modalCustomerJoined').textContent = new Date(window.currentCustomer.joinedDate).toLocaleDateString();
+            document.getElementById('modalCustomerTotal').textContent = window.currentCustomer.totalSpent.toFixed(2);
+
+            // Display gender and age
+            const genderAge = [];
+            if (window.currentCustomer.gender) genderAge.push(`${window.currentCustomer.gender === 'Male' ? '👨' : '👩'} ${window.currentCustomer.gender}`);
+            if (window.currentCustomer.age) genderAge.push(`📅 ${window.currentCustomer.age}`);
+            document.getElementById('modalCustomerGenderAge').textContent = genderAge.join(' | ') || 'No demographic info';
+
+            // Hide edit form
+            document.getElementById('editCustomerForm').style.display = 'none';
 
             // Display stamps
             const stampsHtml = Array.from({length: 10}, (_, i) => {
-                const filled = i < currentCustomer.stamps;
+                const filled = i < window.currentCustomer.stamps;
                 return `<div class="stamp ${filled ? 'filled' : ''}">🍇</div>`;
             }).join('');
             document.getElementById('modalStamps').innerHTML = stampsHtml;
@@ -614,11 +925,42 @@
             displayHistory();
 
             document.getElementById('customerModal').classList.add('active');
-        }
+        };
+
+        // Show edit customer form
+        window.showEditCustomerForm = function() {
+            const form = document.getElementById('editCustomerForm');
+            form.style.display = form.style.display === 'none' ? 'block' : 'none';
+            
+            if (form.style.display === 'block') {
+                document.getElementById('editGender').value = window.currentCustomer.gender || '';
+                document.getElementById('editAge').value = window.currentCustomer.age || '';
+            }
+        };
+
+        // Save customer edit
+        window.saveCustomerEdit = async function() {
+            const gender = document.getElementById('editGender').value;
+            const age = document.getElementById('editAge').value;
+
+            try {
+                const customerRef = doc(window.db, 'customers', window.currentCustomer.firestoreId);
+                await updateDoc(customerRef, {
+                    gender: gender,
+                    age: age
+                });
+
+                alert('✅ Customer info updated!');
+                document.getElementById('editCustomerForm').style.display = 'none';
+            } catch (error) {
+                console.error('Error updating customer:', error);
+                alert('❌ Error updating customer. Please try again.');
+            }
+        };
 
         // Display rewards
-        function displayRewards() {
-            const stamps = currentCustomer.stamps;
+        window.displayRewards = function() {
+            const stamps = window.currentCustomer.stamps;
             const rewards = [];
 
             if (stamps >= 2) rewards.push('FREE +1 topping');
@@ -633,32 +975,41 @@
             } else {
                 container.innerHTML = '<p style="color: #9CA3AF; font-size: 14px;">No rewards available yet. Keep collecting stamps!</p>';
             }
-        }
+        };
 
         // Add stamp
-        function addStamp() {
-            if (currentCustomer.stamps >= 10) {
+        window.addStamp = async function() {
+            if (window.currentCustomer.stamps >= 10) {
                 if (confirm('Customer has reached 10 stamps! Reset stamp card after redeeming reward?')) {
-                    currentCustomer.stamps = 0;
+                    window.currentCustomer.stamps = 0;
                 } else {
                     return;
                 }
             }
 
-            currentCustomer.stamps++;
-            saveData();
-            openCustomerDetail(currentCustomer.id);
-            displayCustomers();
-        }
+            window.currentCustomer.stamps++;
+            
+            try {
+                const customerRef = doc(window.db, 'customers', window.currentCustomer.firestoreId);
+                await updateDoc(customerRef, {
+                    stamps: window.currentCustomer.stamps
+                });
+                
+                openCustomerDetail(window.currentCustomer.firestoreId);
+            } catch (error) {
+                console.error('Error updating stamp:', error);
+                alert('❌ Error updating stamp. Please try again.');
+            }
+        };
 
         // Show add visit form
-        function showAddVisitForm() {
+        window.showAddVisitForm = function() {
             const form = document.getElementById('addVisitForm');
             form.style.display = form.style.display === 'none' ? 'block' : 'none';
-        }
+        };
 
         // Add visit
-        function addVisit() {
+        window.addVisit = async function() {
             const menu = document.getElementById('visitMenu').value.trim();
             const amount = parseFloat(document.getElementById('visitAmount').value);
 
@@ -673,38 +1024,45 @@
                 amount: amount
             };
 
-            currentCustomer.visits.push(visit);
+            window.currentCustomer.visits.push(visit);
             
             // Also add a stamp
-            if (currentCustomer.stamps < 10) {
-                currentCustomer.stamps++;
+            if (window.currentCustomer.stamps < 10) {
+                window.currentCustomer.stamps++;
             } else {
                 if (confirm('Customer has 10 stamps! Reset stamp card?')) {
-                    currentCustomer.stamps = 1;
+                    window.currentCustomer.stamps = 1;
                 }
             }
 
-            saveData();
-            
-            document.getElementById('visitMenu').value = '';
-            document.getElementById('visitAmount').value = '';
-            document.getElementById('addVisitForm').style.display = 'none';
+            try {
+                const customerRef = doc(window.db, 'customers', window.currentCustomer.firestoreId);
+                await updateDoc(customerRef, {
+                    visits: window.currentCustomer.visits,
+                    stamps: window.currentCustomer.stamps
+                });
 
-            openCustomerDetail(currentCustomer.id);
-            displayCustomers();
-            updateStats();
-        }
+                document.getElementById('visitMenu').value = '';
+                document.getElementById('visitAmount').value = '';
+                document.getElementById('addVisitForm').style.display = 'none';
+
+                openCustomerDetail(window.currentCustomer.firestoreId);
+            } catch (error) {
+                console.error('Error adding visit:', error);
+                alert('❌ Error adding visit. Please try again.');
+            }
+        };
 
         // Display history
-        function displayHistory() {
+        window.displayHistory = function() {
             const container = document.getElementById('modalHistory');
             
-            if (currentCustomer.visits.length === 0) {
+            if (window.currentCustomer.visits.length === 0) {
                 container.innerHTML = '<p style="color: #9CA3AF; font-size: 14px;">No visit history yet</p>';
                 return;
             }
 
-            container.innerHTML = currentCustomer.visits.slice().reverse().map(visit => {
+            container.innerHTML = window.currentCustomer.visits.slice().reverse().map(visit => {
                 const date = new Date(visit.date);
                 return `
                     <div class="history-item">
@@ -713,48 +1071,110 @@
                     </div>
                 `;
             }).join('');
-        }
+        };
 
         // Close modal
-        function closeModal() {
+        window.closeModal = function() {
             document.getElementById('customerModal').classList.remove('active');
-            currentCustomer = null;
-        }
+            window.currentCustomer = null;
+        };
 
         // Update stats
-        function updateStats() {
-            document.getElementById('totalCustomers').textContent = customers.length;
-            const totalVisits = customers.reduce((sum, c) => sum + c.visits.length, 0);
+        window.updateStats = function() {
+            document.getElementById('totalCustomers').textContent = window.customers.length;
+            const totalVisits = window.customers.reduce((sum, c) => sum + c.visits.length, 0);
             document.getElementById('totalVisits').textContent = totalVisits;
-        }
+        };
 
         // Update recipient count
-        function updateRecipientCount() {
-            document.getElementById('recipientCount').textContent = customers.length;
-        }
+        window.updateRecipientCount = function() {
+            document.getElementById('recipientCount').textContent = window.customers.length;
+        };
+
+        // Update Top 5 customers for selected month
+        window.updateTop5 = function() {
+            const selectedMonth = document.getElementById('monthSelector').value;
+            if (!selectedMonth) return;
+
+            const [year, month] = selectedMonth.split('-').map(Number);
+            
+            // Calculate monthly spending for each customer
+            const monthlyData = window.customers.map(customer => {
+                const monthlySpent = customer.visits
+                    .filter(visit => {
+                        const visitDate = new Date(visit.date);
+                        return visitDate.getFullYear() === year && visitDate.getMonth() + 1 === month;
+                    })
+                    .reduce((sum, visit) => sum + (visit.amount || 0), 0);
+                
+                const monthlyVisits = customer.visits.filter(visit => {
+                    const visitDate = new Date(visit.date);
+                    return visitDate.getFullYear() === year && visitDate.getMonth() + 1 === month;
+                }).length;
+
+                return {
+                    name: customer.name,
+                    spent: monthlySpent,
+                    visits: monthlyVisits
+                };
+            }).filter(c => c.spent > 0);
+
+            // Sort by spending
+            monthlyData.sort((a, b) => b.spent - a.spent);
+            const top5 = monthlyData.slice(0, 5);
+
+            const container = document.getElementById('top5List');
+            
+            if (top5.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📊</div>
+                        <p>No purchases in this month</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const medals = ['🥇', '🥈', '🥉', '4️⃣', '5️⃣'];
+            
+            container.innerHTML = top5.map((customer, index) => `
+                <div class="ranking-item">
+                    <div class="ranking-medal">${medals[index]}</div>
+                    <div class="ranking-info">
+                        <div class="ranking-name">${customer.name}</div>
+                        <div class="ranking-details">${customer.visits} visits this month</div>
+                    </div>
+                    <div class="ranking-amount">$${customer.spent.toFixed(2)}</div>
+                </div>
+            `).join('');
+        };
 
         // Send broadcast via Telegram
-        async function sendBroadcast() {
+        window.sendBroadcast = async function() {
             const message = document.getElementById('broadcastMessage').value.trim();
+            const btn = document.getElementById('broadcastBtn');
             
             if (!message) {
                 alert('Please enter a message');
                 return;
             }
 
-            if (customers.length === 0) {
+            if (window.customers.length === 0) {
                 alert('No customers to send to');
                 return;
             }
 
-            if (!confirm(`Send this message to ${customers.length} customers?`)) {
+            if (!confirm(`Send this message to ${window.customers.length} customers?`)) {
                 return;
             }
+
+            btn.disabled = true;
+            btn.textContent = 'Sending...';
 
             let successCount = 0;
             let failCount = 0;
 
-            for (const customer of customers) {
+            for (const customer of window.customers) {
                 try {
                     const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
                         method: 'POST',
@@ -780,11 +1200,14 @@
 
             alert(`✅ Broadcast sent!\n\nSuccessful: ${successCount}\nFailed: ${failCount}`);
             document.getElementById('broadcastMessage').value = '';
-        }
+            
+            btn.disabled = false;
+            btn.textContent = '📤 Send Broadcast';
+        };
 
         // Export data
-        function exportData() {
-            const dataStr = JSON.stringify(customers, null, 2);
+        window.exportData = function() {
+            const dataStr = JSON.stringify(window.customers, null, 2);
             const dataBlob = new Blob([dataStr], {type: 'application/json'});
             const url = URL.createObjectURL(dataBlob);
             const link = document.createElement('a');
@@ -792,76 +1215,51 @@
             link.download = `connect_backup_${new Date().toISOString().split('T')[0]}.json`;
             link.click();
             
-            localStorage.setItem('lastBackup', new Date().toISOString());
-            updateLastBackup();
             alert('✅ Backup downloaded successfully!');
-        }
+        };
 
         // Import data
-        function importData(event) {
+        window.importData = async function(event) {
             const file = event.target.files[0];
             if (!file) return;
 
             const reader = new FileReader();
-            reader.onload = function(e) {
+            reader.onload = async function(e) {
                 try {
                     const imported = JSON.parse(e.target.result);
-                    if (confirm('This will replace all current data. Continue?')) {
-                        customers = imported;
-                        saveData();
-                        displayCustomers();
-                        updateStats();
+                    if (confirm('This will add all customers from backup to Firebase. Continue?')) {
+                        showLoading(true);
+                        
+                        for (const customer of imported) {
+                            const { firestoreId, totalSpent, ...customerData } = customer;
+                            await addDoc(window.customersCollection, customerData);
+                        }
+                        
+                        showLoading(false);
                         alert('✅ Data restored successfully!');
                         switchTab('customers');
                     }
                 } catch (error) {
+                    console.error('Error importing data:', error);
                     alert('❌ Invalid backup file');
+                    showLoading(false);
                 }
             };
             reader.readAsText(file);
-        }
+        };
 
-        // Enable auto backup
-        function enableAutoBackup() {
-            if (confirm('Enable daily automatic backup to device storage?')) {
-                localStorage.setItem('autoBackup', 'enabled');
-                alert('✅ Auto backup enabled! Data will be backed up daily.');
-            }
-        }
+        // Monitor online/offline status
+        window.addEventListener('online', () => updateSyncStatus(true));
+        window.addEventListener('offline', () => updateSyncStatus(false));
 
-        // Update last backup display
-        function updateLastBackup() {
-            const lastBackup = localStorage.getItem('lastBackup');
-            if (lastBackup) {
-                const date = new Date(lastBackup);
-                document.getElementById('lastBackup').textContent = date.toLocaleString();
-            }
-        }
-
-        // Save data to localStorage
-        function saveData() {
-            localStorage.setItem('connectCustomers', JSON.stringify(customers));
-        }
-
-        // Load data from localStorage
-        function loadData() {
-            const saved = localStorage.getItem('connectCustomers');
-            if (saved) {
-                customers = JSON.parse(saved);
-            }
-            updateLastBackup();
-        }
-
-        // Auto backup daily
-        setInterval(() => {
-            if (localStorage.getItem('autoBackup') === 'enabled') {
-                const lastBackup = localStorage.getItem('lastBackup');
-                const now = Date.now();
-                if (!lastBackup || now - new Date(lastBackup).getTime() > 24 * 60 * 60 * 1000) {
-                    exportData();
-                }
-            }
-        }, 60 * 60 * 1000); // Check every hour
+        // Make functions available globally
+        window.loadCustomersFromFirebase = loadCustomersFromFirebase;
+        window.showLoading = showLoading;
+        window.addDoc = addDoc;
+        window.updateDoc = updateDoc;
+        window.doc = doc;
+        window.calculateTotalSpent = calculateTotalSpent;
+        window.initializeMonthSelector = initializeMonthSelector;
     </script>
 </body>
 </html>

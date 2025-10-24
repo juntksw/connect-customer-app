@@ -1,7 +1,7 @@
 {
   "name": "CONNECT Customer Manager",
   "short_name": "CONNECT",
-  "description": "Customer management system for CONNECT Acai & Cafe",
+  "description": "Customer management system for CONNECT Acai & Cafe with analytics",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#8B5CF6",
