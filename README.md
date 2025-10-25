@@ -1,336 +1,265 @@
-[Uploading README (1).md…]()
-# CONNECT Customer Manager v3.5
+[README (2).md](https://github.com/user-attachments/files/23139354/README.2.md)
+# CONNECT Customer Manager v3.6
 
-## 🎯 New in v3.5: Quantity Selector & Tap-to-Enter Amount
+## 🎯 New in v3.6: Monthly Statistics Dashboard
 
 ### Overview
-In v3.5, two major improvements have been added for handling multiple purchases:
-1. **Quantity Selector**: +/- buttons to select 1-10 bowls per visit
-2. **Tap-to-Enter Numpad**: Touch-friendly numpad for easy amount entry
+In v3.6, a beautiful monthly statistics card has been added to the top page, showing key metrics for the current month with comparison to the previous month.
 
-Staff can now quickly process multiple bowl purchases with intuitive tap controls.
+### What's New
 
-### Why This Feature?
+**Monthly Statistics Card displays:**
+1. **Active Customers** - Number of unique customers who visited this month
+2. **Total Visits** - Total number of visits this month
+3. **Month-over-Month Growth** - Percentage change compared to last month
 
-**Real-World Scenario:**
-- Customer purchases 3 acai bowls → Should receive 3 stamps
-- Customer purchases 1 bowl with toppings → Total amount varies, but still 1 stamp
-- Previously: Staff had to manually add stamps or create multiple visit records
-
-**Solution:**
-- ✅ Intuitive +/- buttons to select quantity
-- ✅ Visual quantity display
-- ✅ Automatic stamp calculation based on quantity
-- ✅ Single visit record with quantity notation
+**Visual Indicators:**
+- 📈 **Green** (↑ +XX%) - Increase from last month
+- 📉 **Red** (↓ -XX%) - Decrease from last month
+- **Gray** (0%) - No change
 
 ---
 
-## 📱 How to Use (v3.5)
+## 📊 Dashboard Preview
 
-### Recording Multiple Purchases
-
-1. **Select Customer**
-   - Search and select customer from list
-
-2. **Click "Add Visit"**
-   - Form opens with quantity selector
-
-3. **Set Quantity**
-   - Default: 1 bowl
-   - Click **[+]** to increase (max: 10)
-   - Click **[−]** to decrease (min: 1)
-   - Number displays in the center
-
-4. **Enter Details**
-   - Menu Item: e.g., "Original Acai Bowl"
-   - Total Amount: Tap numpad to enter total price
-     - Tap numbers: [1] [5] [0] [0]
-     - Result: $15.00
-     - Use [⌫] to delete, [Clear] to reset
-     - Use [・] for decimal point
-     - Use [00] for quick entry
-
-5. **Save Visit**
-   - Click "Save Visit"
-   - Stamps automatically added = Quantity selected
-   - Menu recorded as "Original Acai Bowl x3" (if quantity > 1)
-
-### Example Scenarios
-
-**Scenario 1: Single Bowl Purchase**
 ```
-Menu Item: Original Acai Bowl
-Quantity: [−] [1] [+]  (default)
-Total Amount: $5.00
-Result: +1 stamp
-History: "Original Acai Bowl - $5.00"
-```
-
-**Scenario 2: Multiple Bowls**
-```
-Menu Item: Original Acai Bowl
-Quantity: [−] [3] [+]  (click + twice)
-Total Amount: $15.00
-Result: +3 stamps
-History: "Original Acai Bowl x3 - $15.00"
-```
-
-**Scenario 3: Bowl with Premium Toppings**
-```
-Menu Item: Original Acai Bowl
-Quantity: [−] [1] [+]
-Total Amount: Tap [8] [・] [5] [0] → $8.50
-Result: +1 stamp
-History: "Original Acai Bowl - $8.50"
-```
-
-**Scenario 4: Quick Entry with [00]**
-```
-Menu Item: Original Acai Bowl
-Quantity: [−] [2] [+]
-Total Amount: Tap [1] [0] [00] → $10.00
-Result: +2 stamps
-History: "Original Acai Bowl x2 - $10.00"
+┌─────────────────────────────────────┐
+│  📈 October 2025                    │
+├──────────────────┬──────────────────┤
+│ 👥 Active        │ 📅 Total Visits  │
+│    Customers     │                  │
+│       45         │      128         │
+│  ↑ +12.5%        │  ↑ +18.2%        │
+└──────────────────┴──────────────────┘
 ```
 
 ---
 
-## 🎨 UI Design
+## 🎨 Design Features
 
-### 1. Quantity Selector
+### Card Layout
+- **Purple gradient background** - Eye-catching header
+- **Glass-morphism effect** - Modern frosted glass look
+- **2-column grid** - Customers and Visits side by side
+- **Large numbers** - Easy to read at a glance
+- **Color-coded indicators** - Instant visual feedback
 
-```
-Quantity (Stamps to Add)
-┌─────────────────────────────┐
-│   [−]    [3]    [+]         │
-│   btn   display  btn        │
-└─────────────────────────────┘
-```
-
-**Features:**
-- **[−] Button**: Purple bordered, decreases quantity
-- **Display**: Purple gradient box with current number
-- **[+] Button**: Purple bordered, increases quantity
-- **Limits**: Min: 1, Max: 10 (buttons auto-disable)
-- **Touch-Friendly**: 45px large tap targets
-
-### 2. Tap-to-Enter Numpad
-
-```
-Total Amount
-┌─────────────────────────────┐
-│     $15.00                  │  ← Green gradient display
-└─────────────────────────────┘
-
-┌─────────────────────────────┐
-│  [1]  [2]  [3]  [⌫]      │
-│  [4]  [5]  [6]  [・]      │
-│  [7]  [8]  [9]  [00]     │
-│  [Clear]    [0]          │
-└─────────────────────────────┘
-```
-
-**Features:**
-- **Display**: Green gradient, large text ($XX.XX)
-- **[1-9]**: White buttons with number input
-- **[0]**: Single-width zero button
-- **[00]**: Quick double-zero entry (yellow)
-- **[・]**: Decimal point (yellow)
-- **[⌫]**: Backspace/delete last digit (yellow)
-- **[Clear]**: Reset to $0.00 (red, 2x width)
-- **Max Amount**: $999.99
-- **Touch-Friendly**: Large buttons with hover effects
+### Responsive Design
+- Adapts to different screen sizes
+- Mobile-friendly layout
+- Touch-optimized
 
 ---
 
-## 🔄 Changes from v3.4
+## 📈 How It Works
+
+### Calculation Logic
+
+**Active Customers (This Month):**
+- Counts unique customers who made at least 1 visit this month
+- Example: Customer A visited 3 times = counted as 1 active customer
+
+**Total Visits (This Month):**
+- Counts all visit records in current month
+- Example: Customer A visited 3 times = counted as 3 visits
+
+**Month-over-Month Comparison:**
+```
+Change % = ((This Month - Last Month) / Last Month) × 100
+
+Examples:
+- This: 45, Last: 40 → +12.5% ↑ (green)
+- This: 35, Last: 40 → -12.5% ↓ (red)
+- This: 40, Last: 40 → 0% (gray)
+- This: 10, Last: 0  → +100% ↑ (new!)
+```
+
+---
+
+## 🔄 Real-time Updates
+
+The monthly statistics automatically update when:
+- New customer added
+- New visit recorded
+- Customer data modified
+- Month changes (automatically resets)
+
+---
+
+## 📱 Use Cases
+
+### Business Insights
+
+**Track Growth:**
+```
+October: 45 customers (+12.5%)
+→ Business is growing!
+```
+
+**Spot Decline:**
+```
+October: 35 customers (-12.5%)
+→ Need marketing campaign
+```
+
+**Monitor Activity:**
+```
+October: 128 visits (+18.2%)
+→ Higher frequency per customer
+```
+
+**Compare Patterns:**
+```
+Customers: +12.5%
+Visits: +18.2%
+→ Customers visiting more frequently!
+```
+
+---
+
+## 🆕 Changes from v3.5
 
 ### New Features
-- ✅ Quantity selector with +/- buttons (1-10)
-- ✅ Visual quantity display with gradient
-- ✅ **Tap-to-enter numpad** for amount input
-- ✅ Large touch-friendly buttons (mobile optimized)
-- ✅ Quick entry buttons ([00], [・], [⌫])
-- ✅ Real-time amount display ($XX.XX)
-- ✅ Multiple stamps per visit
-- ✅ Quantity notation in history (e.g., "x3")
-- ✅ Smart 10-stamp overflow handling
+- ✅ Monthly statistics card with gradient design
+- ✅ Active customers count for current month
+- ✅ Total visits count for current month
+- ✅ Month-over-month percentage comparison
+- ✅ Color-coded growth indicators
+- ✅ Automatic month name display
 
-### Updated Logic
-- **Visit Recording**: Now includes quantity
-- **Stamp Addition**: Based on selected quantity
-- **10-Stamp Overflow**: 
-  - Example: 8 stamps + 3 new = 10 (reward) + 1 overflow
-  - System prompts to reset and add overflow stamps
+### New CSS Classes
+- `.monthly-stats-card` - Main card with gradient
+- `.monthly-stats-title` - Month name header
+- `.monthly-stats-grid` - 2-column layout
+- `.monthly-stat-item` - Individual stat box
+- `.monthly-stat-label` - Label text
+- `.monthly-stat-value` - Large number display
+- `.monthly-stat-change` - Percentage indicator
+- `.positive` / `.negative` / `.neutral` - Color states
 
-### CSS Additions
-- `.quantity-selector` - Quantity container
-- `.quantity-btn` - +/- buttons
-- `.quantity-display` - Number display
-- `.amount-display` - Amount display (green gradient)
-- `.numpad` - 4-column grid layout
-- `.numpad-btn` - Base button styles
-- `.numpad-btn.special` - Yellow accent ([00], [・], [⌫])
-- `.numpad-btn.clear` - Red clear button
-- `.numpad-btn.zero` - Single-width zero
-- Hover, active, and disabled states
-
-### JavaScript Additions
-- `currentQuantity` - Tracks selected quantity
-- `currentAmount` - Tracks entered amount
-- `changeQuantity(delta)` - Quantity +/- handler
-- `updateQuantityDisplay()` - Updates quantity UI
-- `numpadInput(value)` - Number/decimal input
-- `numpadBackspace()` - Delete last digit
-- `numpadClear()` - Reset to $0.00
-- `updateAmountDisplay()` - Updates amount display
-- Modified `showAddVisitForm()` - Resets both quantity and amount
-- Modified `addVisit()` - Uses currentAmount, handles overflow
-
----
-
-## 📊 Operation Flow (v3.5)
-
-```
-Customer purchases multiple bowls
-    ↓
-Click "Add Visit"
-    ↓
-Set quantity using +/- buttons
-    ↓
-Enter menu & total amount
-    ↓
-Click "Save Visit"
-    ↓
-Automatically:
-  ✅ Visit recorded (with quantity notation)
-  ✅ Stamps added = Quantity
-  ✅ Total spent updated
-  ✅ Handle 10-stamp limit & overflow
-  ✅ Reward notification (if earned)
-  ✅ Progress notification (otherwise)
-```
-
----
-
-## 🎉 Previous Features (Still Available)
-
-### v3.4 Features
-- Simplified UI (single "Add Visit" button)
-- Guaranteed data consistency
-
-### v3.3 Features
-- Reward notification animations (English)
-- Progress notifications with remaining stamps
-- "Congratulations!" (golden) / "Almost There!" (purple)
-
-### v3.2 Features
-- Custom stamp icons (🥣🍓💰🍵🎁)
-- Reward redemption tracking
-- Redeemed rewards history
-
-### Earlier Features
-- Customer management (add/search/delete)
-- Gender & age tracking
-- Monthly TOP5 ranking
-- Firebase real-time sync
-- Multi-device support
+### New JavaScript Functions
+- `updateMonthlyStats()` - Calculate monthly data
+- `updatePercentageChange()` - Calculate and format percentages
+- Modified `updateStats()` - Now calls monthly stats update
 
 ---
 
 ## 🧪 Testing Checklist
 
-### Quantity Selector
-- [ ] Default quantity = 1
-- [ ] [+] button increases quantity
-- [ ] [−] button decreases quantity
-- [ ] Cannot go below 1 (button disabled)
-- [ ] Cannot go above 10 (button disabled)
-- [ ] Display shows current quantity
-- [ ] Buttons have hover effects
+### Display Tests
+- [ ] Monthly stats card appears at top of Customers tab
+- [ ] Current month name displays correctly (e.g., "October 2025")
+- [ ] Active Customers number displays correctly
+- [ ] Total Visits number displays correctly
+- [ ] Layout is responsive on mobile
 
-### Numpad Input
-- [ ] Default amount = $0.00
-- [ ] Number buttons input correctly
-- [ ] [00] button adds double zero
-- [ ] [・] button adds decimal point
-- [ ] Cannot add multiple decimal points
-- [ ] [⌫] deletes last digit
-- [ ] [Clear] resets to $0.00
-- [ ] Display shows $XX.XX format
-- [ ] Max amount $999.99 enforced
-- [ ] Touch-friendly button sizes
+### Calculation Tests
+- [ ] Counts only customers who visited this month
+- [ ] Counts all visits in current month
+- [ ] Correctly calculates previous month
+- [ ] Handles year boundary (Dec → Jan)
 
-### Stamp Addition
-- [ ] Quantity 1 → +1 stamp
-- [ ] Quantity 3 → +3 stamps
-- [ ] Quantity 5 → +5 stamps
+### Percentage Tests
+- [ ] Positive change shows green ↑ +XX%
+- [ ] Negative change shows red ↓ -XX%
+- [ ] No change shows gray 0%
+- [ ] First month (no previous data) shows correctly
+- [ ] Zero previous month shows +100% for new data
 
-### Visit History
-- [ ] Quantity 1: "Menu Item"
-- [ ] Quantity 3: "Menu Item x3"
-- [ ] Total amount recorded correctly
-
-### 10-Stamp Overflow
-- [ ] 8 stamps + 2 = 10 (reward prompt)
-- [ ] 8 stamps + 3 = 10 + 1 overflow (prompt to reset and add 1)
-- [ ] 9 stamps + 5 = 10 + 4 overflow (prompt to reset and add 4)
-
-### Reward Notifications
-- [ ] Single stamp reaching 2/5/8/10 triggers notification
-- [ ] Multiple stamps crossing thresholds trigger notification
-- [ ] Animations display correctly
-
-### Mobile Responsiveness
-- [ ] Buttons are touch-friendly (45px)
-- [ ] Layout works on small screens
-- [ ] Text is readable
+### Real-time Updates
+- [ ] Updates when new visit added
+- [ ] Updates when new customer added
+- [ ] Numbers match actual data
+- [ ] Changes reflect immediately
 
 ---
 
 ## 📦 File Information
 
-- **index.html**: 70KB (1,997 lines)
+- **index.html**: 77KB (2,176 lines)
 - **manifest.json**: 684B
-- **Version**: v3.5
-- **Backup**: `/mnt/aidrive/CONNECT_Acai_App/connect_acai_app_v3.5.zip`
+- **Version**: v3.6
+- **Backup**: `/mnt/aidrive/CONNECT_Acai_App/connect_acai_app_v3.6.zip`
 
 ---
 
 ## 📚 Version History
 
-### v3.5 (Current)
-- Added quantity selector for multiple purchases
-- Support for 1-10 bowls per visit
-- Smart overflow handling for 10-stamp limit
-- Quantity notation in visit history
+### v3.6 (Current)
+- Added monthly statistics dashboard
+- Active customers tracking
+- Month-over-month comparison
+- Visual growth indicators
+
+### v3.5
+- Quantity selector (1-10 bowls)
+- Tap-to-enter numpad
+- Smart overflow handling
 
 ### v3.4
 - Removed "Add Stamp" button
-- Simplified UI for guaranteed data consistency
+- Simplified operations
 
 ### v3.3
 - Reward notification animations
 - Progress notifications
-- All texts in English
+- English language support
 
 ### v3.2
 - Custom stamp icons
 - Reward redemption tracking
-- Redeemed rewards history
 
 ### v3.1
 - Customer deletion feature
 
 ### v3.0
-- Gender & age information
+- Gender & age tracking
 - Total spent calculation
 - Monthly TOP5 ranking
 
 ### v2.0
-- Firebase Firestore integration
-- Real-time multi-device sync
+- Firebase integration
+- Real-time sync
 
 ### v1.0
-- Local storage version
+- Initial release
 - Basic stamp card system
+
+---
+
+## 💡 Future Enhancements (Optional)
+
+Potential additions for future versions:
+- **Daily statistics** - Compare today vs yesterday
+- **Weekly trends** - 7-day moving average
+- **Revenue metrics** - Total $ earned this month
+- **Average visit value** - $ per visit
+- **Customer retention** - Returning customer %
+- **Growth charts** - Visual line/bar graphs
+- **Export reports** - Download monthly reports
+- **Year-over-year** - Compare to same month last year
+
+---
+
+## 🎉 Benefits
+
+### For Store Owners
+- ✅ Instant visibility into business health
+- ✅ Track growth month-by-month
+- ✅ Identify trends early
+- ✅ Make data-driven decisions
+
+### For Staff
+- ✅ See impact of their work
+- ✅ Motivation through visible progress
+- ✅ Easy to understand metrics
+
+### For Business Planning
+- ✅ Spot seasonal patterns
+- ✅ Evaluate marketing effectiveness
+- ✅ Set realistic goals
+- ✅ Monitor customer retention
+
+---
+
+**v3.6 brings powerful business insights to your dashboard!** 📊✨
