@@ -1,173 +1,336 @@
-# CONNECT Customer Manager
+[Uploading README (1).md…]()
+# CONNECT Customer Manager v3.5
 
-Customer management application for CONNECT Acai & Cafe, Phnom Penh, Cambodia.
+## 🎯 New in v3.5: Quantity Selector & Tap-to-Enter Amount
 
-## Features
+### Overview
+In v3.5, two major improvements have been added for handling multiple purchases:
+1. **Quantity Selector**: +/- buttons to select 1-10 bowls per visit
+2. **Tap-to-Enter Numpad**: Touch-friendly numpad for easy amount entry
 
-✅ **Customer Management**
-- Add new customers with name and Telegram phone number
-- Search customers by name
-- View customer details and history
+Staff can now quickly process multiple bowl purchases with intuitive tap controls.
 
-✅ **Digital Stamp Card System**
-- Track customer stamps (max 10)
-- Automatic reward display:
-  - 2 stamps → FREE +1 topping
-  - 5 stamps → 50% OFF
-  - 8 stamps → FREE MATCHA
-  - 10 stamps → Baby Size Acai Bowl FREE
-- Auto-reset at 10 stamps
+### Why This Feature?
 
-✅ **Visit History Tracking**
-- Record visit date/time
-- Track purchased menu items
-- Track purchase amounts
+**Real-World Scenario:**
+- Customer purchases 3 acai bowls → Should receive 3 stamps
+- Customer purchases 1 bowl with toppings → Total amount varies, but still 1 stamp
+- Previously: Staff had to manually add stamps or create multiple visit records
 
-✅ **Telegram Broadcast**
-- Send bulk messages to all customers
-- Integrated with Telegram Bot API
+**Solution:**
+- ✅ Intuitive +/- buttons to select quantity
+- ✅ Visual quantity display
+- ✅ Automatic stamp calculation based on quantity
+- ✅ Single visit record with quantity notation
 
-✅ **Data Backup**
-- Manual backup (export JSON)
-- Import backup to restore data
-- Auto-backup option
+---
 
-## Installation
+## 📱 How to Use (v3.5)
 
-### Option 1: Host on Free Platform (Recommended)
+### Recording Multiple Purchases
 
-1. **Using Netlify (Free)**:
-   - Go to https://app.netlify.com/drop
-   - Drag and drop the entire `connect_acai_app` folder
-   - Get your app URL instantly!
+1. **Select Customer**
+   - Search and select customer from list
 
-2. **Using GitHub Pages (Free)**:
-   - Create a GitHub account
-   - Create a new repository
-   - Upload all files
-   - Enable GitHub Pages in settings
-   - Access at: `https://yourusername.github.io/repo-name`
+2. **Click "Add Visit"**
+   - Form opens with quantity selector
 
-### Option 2: Local Testing
+3. **Set Quantity**
+   - Default: 1 bowl
+   - Click **[+]** to increase (max: 10)
+   - Click **[−]** to decrease (min: 1)
+   - Number displays in the center
 
-1. Open `index.html` in a web browser
-2. All data is stored locally in the browser
+4. **Enter Details**
+   - Menu Item: e.g., "Original Acai Bowl"
+   - Total Amount: Tap numpad to enter total price
+     - Tap numbers: [1] [5] [0] [0]
+     - Result: $15.00
+     - Use [⌫] to delete, [Clear] to reset
+     - Use [・] for decimal point
+     - Use [00] for quick entry
 
-## How to Use
+5. **Save Visit**
+   - Click "Save Visit"
+   - Stamps automatically added = Quantity selected
+   - Menu recorded as "Original Acai Bowl x3" (if quantity > 1)
 
-### Adding New Customer
-1. Go to "Add New" tab
-2. Enter customer name
-3. Enter Telegram phone number (format: +855 12 345 678)
-4. Click "Add Customer"
+### Example Scenarios
 
-### Recording a Visit
-1. Click on customer name from list
-2. Click "Add Visit" button
-3. Enter menu item and amount
-4. Click "Save Visit"
-- This automatically adds 1 stamp
-
-### Adding Just a Stamp
-1. Click on customer name
-2. Click "Add Stamp" button
-
-### Sending Broadcast Message
-1. Go to "Broadcast" tab
-2. Type your message
-3. Click "Send Broadcast"
-
-**Important**: For Telegram broadcast to work, customers must:
-1. Have started a chat with your bot first
-2. Use the exact phone number registered with Telegram
-
-### Telegram Bot Setup
-
-Your bot is already created! Bot username: `@connect_acai_bot`
-
-To allow customers to receive messages:
-1. Share this link with customers: https://t.me/connect_acai_bot
-2. Ask them to click "START" button
-3. Now they can receive your broadcasts!
-
-### Backing Up Data
-
-**Manual Backup**:
-1. Go to "Backup" tab
-2. Click "Download Backup"
-3. Save the JSON file to a safe location
-
-**Restore Backup**:
-1. Go to "Backup" tab
-2. Click "Restore from Backup"
-3. Select your backup JSON file
-
-**Auto Backup**:
-1. Go to "Backup" tab
-2. Click "Enable Auto Backup"
-3. Data will be backed up daily automatically
-
-## Technical Details
-
-- **Type**: Progressive Web App (PWA)
-- **Storage**: Browser LocalStorage
-- **Offline**: Works without internet (except Telegram broadcast)
-- **Device**: Mobile-optimized (works on all devices)
-- **Languages**: English interface (can be customized)
-
-## Data Structure
-
-```javascript
-{
-  id: timestamp,
-  name: "Customer Name",
-  phone: "+855 12 345 678",
-  stamps: 0-10,
-  joinedDate: "ISO date",
-  visits: [
-    {
-      date: "ISO date",
-      menu: "Menu item name",
-      amount: 0.00
-    }
-  ]
-}
+**Scenario 1: Single Bowl Purchase**
+```
+Menu Item: Original Acai Bowl
+Quantity: [−] [1] [+]  (default)
+Total Amount: $5.00
+Result: +1 stamp
+History: "Original Acai Bowl - $5.00"
 ```
 
-## Telegram Bot Commands
-
-Your bot token is embedded in the app (secure for single-user app).
-
-To send messages programmatically:
+**Scenario 2: Multiple Bowls**
 ```
-POST https://api.telegram.org/bot8280988484:AAF35cs0TLiNIWACrV5zRy89OoUEVLf_xdM/sendMessage
-{
-  "chat_id": "phone_number",
-  "text": "Your message"
-}
+Menu Item: Original Acai Bowl
+Quantity: [−] [3] [+]  (click + twice)
+Total Amount: $15.00
+Result: +3 stamps
+History: "Original Acai Bowl x3 - $15.00"
 ```
 
-## Troubleshooting
+**Scenario 3: Bowl with Premium Toppings**
+```
+Menu Item: Original Acai Bowl
+Quantity: [−] [1] [+]
+Total Amount: Tap [8] [・] [5] [0] → $8.50
+Result: +1 stamp
+History: "Original Acai Bowl - $8.50"
+```
 
-### Telegram messages not sending?
-- Make sure customer has started chat with bot
-- Check phone number format (+855 12 345 678)
-- Verify internet connection
+**Scenario 4: Quick Entry with [00]**
+```
+Menu Item: Original Acai Bowl
+Quantity: [−] [2] [+]
+Total Amount: Tap [1] [0] [00] → $10.00
+Result: +2 stamps
+History: "Original Acai Bowl x2 - $10.00"
+```
 
-### Data disappeared?
-- Check if using same browser/device
-- Restore from backup
-- Check if browser storage was cleared
+---
 
-### App not loading?
-- Clear browser cache
-- Try different browser
-- Check internet connection (for first load)
+## 🎨 UI Design
 
-## Support
+### 1. Quantity Selector
 
-For issues or questions about this app, contact the developer.
+```
+Quantity (Stamps to Add)
+┌─────────────────────────────┐
+│   [−]    [3]    [+]         │
+│   btn   display  btn        │
+└─────────────────────────────┘
+```
 
-## License
+**Features:**
+- **[−] Button**: Purple bordered, decreases quantity
+- **Display**: Purple gradient box with current number
+- **[+] Button**: Purple bordered, increases quantity
+- **Limits**: Min: 1, Max: 10 (buttons auto-disable)
+- **Touch-Friendly**: 45px large tap targets
 
-Custom built for CONNECT Acai & Cafe. All rights reserved.
+### 2. Tap-to-Enter Numpad
+
+```
+Total Amount
+┌─────────────────────────────┐
+│     $15.00                  │  ← Green gradient display
+└─────────────────────────────┘
+
+┌─────────────────────────────┐
+│  [1]  [2]  [3]  [⌫]      │
+│  [4]  [5]  [6]  [・]      │
+│  [7]  [8]  [9]  [00]     │
+│  [Clear]    [0]          │
+└─────────────────────────────┘
+```
+
+**Features:**
+- **Display**: Green gradient, large text ($XX.XX)
+- **[1-9]**: White buttons with number input
+- **[0]**: Single-width zero button
+- **[00]**: Quick double-zero entry (yellow)
+- **[・]**: Decimal point (yellow)
+- **[⌫]**: Backspace/delete last digit (yellow)
+- **[Clear]**: Reset to $0.00 (red, 2x width)
+- **Max Amount**: $999.99
+- **Touch-Friendly**: Large buttons with hover effects
+
+---
+
+## 🔄 Changes from v3.4
+
+### New Features
+- ✅ Quantity selector with +/- buttons (1-10)
+- ✅ Visual quantity display with gradient
+- ✅ **Tap-to-enter numpad** for amount input
+- ✅ Large touch-friendly buttons (mobile optimized)
+- ✅ Quick entry buttons ([00], [・], [⌫])
+- ✅ Real-time amount display ($XX.XX)
+- ✅ Multiple stamps per visit
+- ✅ Quantity notation in history (e.g., "x3")
+- ✅ Smart 10-stamp overflow handling
+
+### Updated Logic
+- **Visit Recording**: Now includes quantity
+- **Stamp Addition**: Based on selected quantity
+- **10-Stamp Overflow**: 
+  - Example: 8 stamps + 3 new = 10 (reward) + 1 overflow
+  - System prompts to reset and add overflow stamps
+
+### CSS Additions
+- `.quantity-selector` - Quantity container
+- `.quantity-btn` - +/- buttons
+- `.quantity-display` - Number display
+- `.amount-display` - Amount display (green gradient)
+- `.numpad` - 4-column grid layout
+- `.numpad-btn` - Base button styles
+- `.numpad-btn.special` - Yellow accent ([00], [・], [⌫])
+- `.numpad-btn.clear` - Red clear button
+- `.numpad-btn.zero` - Single-width zero
+- Hover, active, and disabled states
+
+### JavaScript Additions
+- `currentQuantity` - Tracks selected quantity
+- `currentAmount` - Tracks entered amount
+- `changeQuantity(delta)` - Quantity +/- handler
+- `updateQuantityDisplay()` - Updates quantity UI
+- `numpadInput(value)` - Number/decimal input
+- `numpadBackspace()` - Delete last digit
+- `numpadClear()` - Reset to $0.00
+- `updateAmountDisplay()` - Updates amount display
+- Modified `showAddVisitForm()` - Resets both quantity and amount
+- Modified `addVisit()` - Uses currentAmount, handles overflow
+
+---
+
+## 📊 Operation Flow (v3.5)
+
+```
+Customer purchases multiple bowls
+    ↓
+Click "Add Visit"
+    ↓
+Set quantity using +/- buttons
+    ↓
+Enter menu & total amount
+    ↓
+Click "Save Visit"
+    ↓
+Automatically:
+  ✅ Visit recorded (with quantity notation)
+  ✅ Stamps added = Quantity
+  ✅ Total spent updated
+  ✅ Handle 10-stamp limit & overflow
+  ✅ Reward notification (if earned)
+  ✅ Progress notification (otherwise)
+```
+
+---
+
+## 🎉 Previous Features (Still Available)
+
+### v3.4 Features
+- Simplified UI (single "Add Visit" button)
+- Guaranteed data consistency
+
+### v3.3 Features
+- Reward notification animations (English)
+- Progress notifications with remaining stamps
+- "Congratulations!" (golden) / "Almost There!" (purple)
+
+### v3.2 Features
+- Custom stamp icons (🥣🍓💰🍵🎁)
+- Reward redemption tracking
+- Redeemed rewards history
+
+### Earlier Features
+- Customer management (add/search/delete)
+- Gender & age tracking
+- Monthly TOP5 ranking
+- Firebase real-time sync
+- Multi-device support
+
+---
+
+## 🧪 Testing Checklist
+
+### Quantity Selector
+- [ ] Default quantity = 1
+- [ ] [+] button increases quantity
+- [ ] [−] button decreases quantity
+- [ ] Cannot go below 1 (button disabled)
+- [ ] Cannot go above 10 (button disabled)
+- [ ] Display shows current quantity
+- [ ] Buttons have hover effects
+
+### Numpad Input
+- [ ] Default amount = $0.00
+- [ ] Number buttons input correctly
+- [ ] [00] button adds double zero
+- [ ] [・] button adds decimal point
+- [ ] Cannot add multiple decimal points
+- [ ] [⌫] deletes last digit
+- [ ] [Clear] resets to $0.00
+- [ ] Display shows $XX.XX format
+- [ ] Max amount $999.99 enforced
+- [ ] Touch-friendly button sizes
+
+### Stamp Addition
+- [ ] Quantity 1 → +1 stamp
+- [ ] Quantity 3 → +3 stamps
+- [ ] Quantity 5 → +5 stamps
+
+### Visit History
+- [ ] Quantity 1: "Menu Item"
+- [ ] Quantity 3: "Menu Item x3"
+- [ ] Total amount recorded correctly
+
+### 10-Stamp Overflow
+- [ ] 8 stamps + 2 = 10 (reward prompt)
+- [ ] 8 stamps + 3 = 10 + 1 overflow (prompt to reset and add 1)
+- [ ] 9 stamps + 5 = 10 + 4 overflow (prompt to reset and add 4)
+
+### Reward Notifications
+- [ ] Single stamp reaching 2/5/8/10 triggers notification
+- [ ] Multiple stamps crossing thresholds trigger notification
+- [ ] Animations display correctly
+
+### Mobile Responsiveness
+- [ ] Buttons are touch-friendly (45px)
+- [ ] Layout works on small screens
+- [ ] Text is readable
+
+---
+
+## 📦 File Information
+
+- **index.html**: 70KB (1,997 lines)
+- **manifest.json**: 684B
+- **Version**: v3.5
+- **Backup**: `/mnt/aidrive/CONNECT_Acai_App/connect_acai_app_v3.5.zip`
+
+---
+
+## 📚 Version History
+
+### v3.5 (Current)
+- Added quantity selector for multiple purchases
+- Support for 1-10 bowls per visit
+- Smart overflow handling for 10-stamp limit
+- Quantity notation in visit history
+
+### v3.4
+- Removed "Add Stamp" button
+- Simplified UI for guaranteed data consistency
+
+### v3.3
+- Reward notification animations
+- Progress notifications
+- All texts in English
+
+### v3.2
+- Custom stamp icons
+- Reward redemption tracking
+- Redeemed rewards history
+
+### v3.1
+- Customer deletion feature
+
+### v3.0
+- Gender & age information
+- Total spent calculation
+- Monthly TOP5 ranking
+
+### v2.0
+- Firebase Firestore integration
+- Real-time multi-device sync
+
+### v1.0
+- Local storage version
+- Basic stamp card system
