@@ -505,16 +505,16 @@
     <div class="container">
         <div class="header">
             <h1>🍇 CONNECT</h1>
-            <p>Customer Manager v3.1</p>
+            <p>Customer Manager v3.1.1</p>
             <div id="syncStatus" class="sync-status online">🔄 Synced</div>
         </div>
 
         <div class="tab-buttons">
-            <button class="tab-btn active" onclick="switchTab('customers')">👥</button>
-            <button class="tab-btn" onclick="switchTab('add')">➕</button>
-            <button class="tab-btn" onclick="switchTab('analytics')">📊</button>
-            <button class="tab-btn" onclick="switchTab('broadcast')">📢</button>
-            <button class="tab-btn" onclick="switchTab('backup')">💾</button>
+            <button class="tab-btn active" onclick="switchTab('customers', event)">👥</button>
+            <button class="tab-btn" onclick="switchTab('add', event)">➕</button>
+            <button class="tab-btn" onclick="switchTab('analytics', event)">📊</button>
+            <button class="tab-btn" onclick="switchTab('broadcast', event)">📢</button>
+            <button class="tab-btn" onclick="switchTab('backup', event)">💾</button>
         </div>
 
         <div id="loadingScreen" class="card loading" style="display: none;">
@@ -827,12 +827,19 @@
         }
 
         // Tab switching
-        window.switchTab = function(tabName) {
+        window.switchTab = function(tabName, event) {
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
             
             document.getElementById(tabName).classList.add('active');
-            event.target.classList.add('active');
+            
+            // Find and activate the correct tab button
+            const tabButtons = document.querySelectorAll('.tab-btn');
+            const tabNames = ['customers', 'add', 'analytics', 'broadcast', 'backup'];
+            const tabIndex = tabNames.indexOf(tabName);
+            if (tabIndex !== -1 && tabButtons[tabIndex]) {
+                tabButtons[tabIndex].classList.add('active');
+            }
 
             if (tabName === 'broadcast') {
                 updateRecipientCount();
@@ -877,7 +884,7 @@
                 document.getElementById('newCustomerAge').value = '';
 
                 alert('✅ Customer added successfully!');
-                switchTab('customers');
+                switchTab('customers', null);
             } catch (error) {
                 console.error('Error adding customer:', error);
                 alert('❌ Error adding customer. Please try again.');
@@ -1036,7 +1043,7 @@
 
                 alert(`✅ ${customerName} has been deleted successfully.`);
                 closeModal();
-                switchTab('customers');
+                switchTab('customers', null);
             } catch (error) {
                 console.error('Error deleting customer:', error);
                 alert('❌ Error deleting customer. Please try again.');
@@ -1322,7 +1329,7 @@
                         
                         showLoading(false);
                         alert('✅ Data restored successfully!');
-                        switchTab('customers');
+                        switchTab('customers', null);
                     }
                 } catch (error) {
                     console.error('Error importing data:', error);
