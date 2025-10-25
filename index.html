@@ -890,6 +890,86 @@
         .monthly-stat-change.neutral {
             color: #9CA3AF;
         }
+
+        /* Monthly History Table Styles */
+        .monthly-history-toggle {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            margin-top: 15px;
+            width: 100%;
+            transition: all 0.2s ease;
+        }
+
+        .monthly-history-toggle:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .monthly-history-container {
+            display: none;
+            margin-top: 15px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+            padding: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        .monthly-history-container.show {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        .monthly-history-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+
+        .monthly-history-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .monthly-history-table th {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px;
+            text-align: left;
+            font-size: 12px;
+            font-weight: 600;
+            opacity: 0.9;
+        }
+
+        .monthly-history-table td {
+            padding: 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 13px;
+        }
+
+        .monthly-history-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .monthly-history-table .current-month {
+            background: rgba(255, 255, 255, 0.1);
+            font-weight: 600;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
     </style>
 </head>
 <body>
@@ -933,6 +1013,26 @@
                             0%
                         </div>
                     </div>
+                </div>
+                
+                <button class="monthly-history-toggle" onclick="toggleMonthlyHistory()">
+                    <span id="historyToggleText">📅 View Monthly History ▼</span>
+                </button>
+                
+                <div class="monthly-history-container" id="monthlyHistoryContainer">
+                    <div class="monthly-history-title">📊 Past 6 Months</div>
+                    <table class="monthly-history-table">
+                        <thead>
+                            <tr>
+                                <th>Month</th>
+                                <th>👥 Customers</th>
+                                <th>📅 Visits</th>
+                            </tr>
+                        </thead>
+                        <tbody id="monthlyHistoryTableBody">
+                            <!-- Populated by JavaScript -->
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
@@ -1974,6 +2074,87 @@
             }
         }
 
+        // Toggle monthly history display
+        window.toggleMonthlyHistory = function() {
+            const container = document.getElementById('monthlyHistoryContainer');
+            const toggleText = document.getElementById('historyToggleText');
+            
+            if (container.classList.contains('show')) {
+                container.classList.remove('show');
+                toggleText.textContent = '📅 View Monthly History ▼';
+            } else {
+                container.classList.add('show');
+                toggleText.textContent = '📅 Hide Monthly History ▲';
+                updateMonthlyHistoryTable();
+            }
+        };
+
+        // Update monthly history table
+        function updateMonthlyHistoryTable() {
+            const tbody = document.getElementById('monthlyHistoryTableBody');
+            tbody.innerHTML = '';
+            
+            const now = new Date();
+            const currentYear = now.getFullYear();
+            const currentMonth = now.getMonth() + 1;
+            
+            const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                              'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            
+            // Generate last 6 months (including current)
+            const monthsData = [];
+            for (let i = 0; i < 6; i++) {
+                let year = currentYear;
+                let month = currentMonth - i;
+                
+                if (month <= 0) {
+                    month += 12;
+                    year -= 1;
+                }
+                
+                // Calculate stats for this month
+                let monthCustomers = 0;
+                let monthVisits = 0;
+                
+                window.customers.forEach(customer => {
+                    const monthVisitsList = customer.visits.filter(visit => {
+                        const visitDate = new Date(visit.date);
+                        return visitDate.getFullYear() === year && 
+                               visitDate.getMonth() + 1 === month;
+                    });
+                    
+                    if (monthVisitsList.length > 0) {
+                        monthCustomers++;
+                        monthVisits += monthVisitsList.length;
+                    }
+                });
+                
+                monthsData.push({
+                    year: year,
+                    month: month,
+                    customers: monthCustomers,
+                    visits: monthVisits,
+                    isCurrent: i === 0
+                });
+            }
+            
+            // Render table rows
+            monthsData.forEach(data => {
+                const row = document.createElement('tr');
+                if (data.isCurrent) {
+                    row.classList.add('current-month');
+                }
+                
+                row.innerHTML = `
+                    <td>${monthNames[data.month - 1]} ${data.year}</td>
+                    <td>${data.customers}</td>
+                    <td>${data.visits}</td>
+                `;
+                
+                tbody.appendChild(row);
+            });
+        }
+
         // Update recipient count
         window.updateRecipientCount = function() {
             document.getElementById('recipientCount').textContent = window.customers.length;
@@ -2160,6 +2341,8 @@
         window.numpadBackspace = numpadBackspace;
         window.numpadClear = numpadClear;
         window.updateAmountDisplay = updateAmountDisplay;
+        window.toggleMonthlyHistory = toggleMonthlyHistory;
+        window.updateMonthlyHistoryTable = updateMonthlyHistoryTable;
     </script>
 
     <!-- Reward Notification Modal -->
