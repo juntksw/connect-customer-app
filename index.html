@@ -828,13 +828,75 @@
         .numpad-btn.zero {
             grid-column: span 1;
         }
+
+        /* Monthly Stats Styles */
+        .monthly-stats-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            color: white;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+
+        .monthly-stats-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            opacity: 0.9;
+        }
+
+        .monthly-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .monthly-stat-item {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+            padding: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        .monthly-stat-label {
+            font-size: 13px;
+            opacity: 0.8;
+            margin-bottom: 8px;
+        }
+
+        .monthly-stat-value {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .monthly-stat-change {
+            font-size: 13px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .monthly-stat-change.positive {
+            color: #10B981;
+        }
+
+        .monthly-stat-change.negative {
+            color: #EF4444;
+        }
+
+        .monthly-stat-change.neutral {
+            color: #9CA3AF;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
             <h1>CONNECT</h1>
-            <p>Customer Manager v3.5</p>
+            <p>Customer Manager v3.6</p>
             <div id="syncStatus" class="sync-status online">🔄 Synced</div>
         </div>
 
@@ -853,6 +915,27 @@
 
         <!-- Customers Tab -->
         <div id="customers" class="tab-content active">
+            <!-- Monthly Stats Card -->
+            <div class="monthly-stats-card">
+                <div class="monthly-stats-title">📈 <span id="currentMonthName">This Month</span></div>
+                <div class="monthly-stats-grid">
+                    <div class="monthly-stat-item">
+                        <div class="monthly-stat-label">👥 Active Customers</div>
+                        <div class="monthly-stat-value" id="monthlyCustomers">0</div>
+                        <div class="monthly-stat-change neutral" id="monthlyCustomersChange">
+                            0%
+                        </div>
+                    </div>
+                    <div class="monthly-stat-item">
+                        <div class="monthly-stat-label">📅 Total Visits</div>
+                        <div class="monthly-stat-value" id="monthlyVisits">0</div>
+                        <div class="monthly-stat-change neutral" id="monthlyVisitsChange">
+                            0%
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="card">
                 <div class="stats">
                     <div class="stat-box">
@@ -1793,7 +1876,103 @@
             document.getElementById('totalCustomers').textContent = window.customers.length;
             const totalVisits = window.customers.reduce((sum, c) => sum + c.visits.length, 0);
             document.getElementById('totalVisits').textContent = totalVisits;
+            
+            // Update monthly stats
+            updateMonthlyStats();
         };
+
+        // Calculate monthly statistics
+        function updateMonthlyStats() {
+            const now = new Date();
+            const currentYear = now.getFullYear();
+            const currentMonth = now.getMonth() + 1; // 1-12
+            
+            // Previous month
+            let prevYear = currentYear;
+            let prevMonth = currentMonth - 1;
+            if (prevMonth === 0) {
+                prevMonth = 12;
+                prevYear = currentYear - 1;
+            }
+
+            // Month names
+            const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+                              'July', 'August', 'September', 'October', 'November', 'December'];
+            document.getElementById('currentMonthName').textContent = 
+                `📈 ${monthNames[currentMonth - 1]} ${currentYear}`;
+
+            // Calculate current month stats
+            let currentMonthCustomers = 0;
+            let currentMonthVisits = 0;
+            
+            window.customers.forEach(customer => {
+                const monthVisits = customer.visits.filter(visit => {
+                    const visitDate = new Date(visit.date);
+                    return visitDate.getFullYear() === currentYear && 
+                           visitDate.getMonth() + 1 === currentMonth;
+                });
+                
+                if (monthVisits.length > 0) {
+                    currentMonthCustomers++;
+                    currentMonthVisits += monthVisits.length;
+                }
+            });
+
+            // Calculate previous month stats
+            let prevMonthCustomers = 0;
+            let prevMonthVisits = 0;
+            
+            window.customers.forEach(customer => {
+                const monthVisits = customer.visits.filter(visit => {
+                    const visitDate = new Date(visit.date);
+                    return visitDate.getFullYear() === prevYear && 
+                           visitDate.getMonth() + 1 === prevMonth;
+                });
+                
+                if (monthVisits.length > 0) {
+                    prevMonthCustomers++;
+                    prevMonthVisits += monthVisits.length;
+                }
+            });
+
+            // Update display
+            document.getElementById('monthlyCustomers').textContent = currentMonthCustomers;
+            document.getElementById('monthlyVisits').textContent = currentMonthVisits;
+
+            // Calculate and display percentage changes
+            updatePercentageChange('monthlyCustomersChange', currentMonthCustomers, prevMonthCustomers);
+            updatePercentageChange('monthlyVisitsChange', currentMonthVisits, prevMonthVisits);
+        }
+
+        // Update percentage change display
+        function updatePercentageChange(elementId, currentValue, previousValue) {
+            const element = document.getElementById(elementId);
+            
+            if (previousValue === 0) {
+                if (currentValue === 0) {
+                    element.textContent = '0%';
+                    element.className = 'monthly-stat-change neutral';
+                } else {
+                    element.textContent = '+100%';
+                    element.className = 'monthly-stat-change positive';
+                }
+                return;
+            }
+
+            const percentChange = ((currentValue - previousValue) / previousValue * 100).toFixed(1);
+            const absChange = Math.abs(percentChange);
+            
+            if (percentChange > 0) {
+                element.textContent = `↑ +${absChange}%`;
+                element.className = 'monthly-stat-change positive';
+            } else if (percentChange < 0) {
+                element.textContent = `↓ -${absChange}%`;
+                element.className = 'monthly-stat-change negative';
+            } else {
+                element.textContent = '0%';
+                element.className = 'monthly-stat-change neutral';
+            }
+        }
 
         // Update recipient count
         window.updateRecipientCount = function() {
