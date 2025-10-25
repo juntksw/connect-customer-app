@@ -1,10 +1,10 @@
-[README (2).md](https://github.com/user-attachments/files/23139354/README.2.md)
+[README (3).md](https://github.com/user-attachments/files/23139426/README.3.md)
 # CONNECT Customer Manager v3.6
 
-## 🎯 New in v3.6: Monthly Statistics Dashboard
+## 🎯 New in v3.6: Monthly Statistics Dashboard with History
 
 ### Overview
-In v3.6, a beautiful monthly statistics card has been added to the top page, showing key metrics for the current month with comparison to the previous month.
+In v3.6, a beautiful monthly statistics card has been added to the top page, showing key metrics for the current month with comparison to the previous month. Plus, you can now view a detailed history of the past 6 months!
 
 ### What's New
 
@@ -12,6 +12,7 @@ In v3.6, a beautiful monthly statistics card has been added to the top page, sho
 1. **Active Customers** - Number of unique customers who visited this month
 2. **Total Visits** - Total number of visits this month
 3. **Month-over-Month Growth** - Percentage change compared to last month
+4. **🆕 Monthly History Table** - Click to view past 6 months (expandable)
 
 **Visual Indicators:**
 - 📈 **Green** (↑ +XX%) - Increase from last month
@@ -22,15 +23,38 @@ In v3.6, a beautiful monthly statistics card has been added to the top page, sho
 
 ## 📊 Dashboard Preview
 
+**Collapsed View:**
 ```
 ┌─────────────────────────────────────┐
 │  📈 October 2025                    │
 ├──────────────────┬──────────────────┤
-│ 👥 Active        │ 📅 Total Visits  │
-│    Customers     │                  │
-│       45         │      128         │
+│ 👥 Active: 45    │ 📅 Visits: 128   │
 │  ↑ +12.5%        │  ↑ +18.2%        │
-└──────────────────┴──────────────────┘
+├──────────────────┴──────────────────┤
+│ [📅 View Monthly History ▼]    │
+└─────────────────────────────────────┘
+```
+
+**Expanded View:**
+```
+┌─────────────────────────────────────┐
+│  📈 October 2025                    │
+├──────────────────┬──────────────────┤
+│ 👥 Active: 45    │ 📅 Visits: 128   │
+├──────────────────┴──────────────────┤
+│ [📅 Hide Monthly History ▲]     │
+├─────────────────────────────────────┤
+│ 📊 Past 6 Months                  │
+├──────────┬───────────┬─────────────┤
+│ Month    │ Customers │ Visits      │
+├──────────┼───────────┼─────────────┤
+│ Oct 2025 │    45     │    128      │ ← Current
+│ Sep 2025 │    40     │    108      │
+│ Aug 2025 │    38     │    102      │
+│ Jul 2025 │    35     │     95      │
+│ Jun 2025 │    32     │     88      │
+│ May 2025 │    30     │     82      │
+└──────────┴───────────┴─────────────┘
 ```
 
 ---
@@ -43,6 +67,8 @@ In v3.6, a beautiful monthly statistics card has been added to the top page, sho
 - **2-column grid** - Customers and Visits side by side
 - **Large numbers** - Easy to read at a glance
 - **Color-coded indicators** - Instant visual feedback
+- **Expandable history** - Click button to view past 6 months
+- **Table format** - Clean, organized data display
 
 ### Responsive Design
 - Adapts to different screen sizes
@@ -176,7 +202,7 @@ Visits: +18.2%
 
 ## 📦 File Information
 
-- **index.html**: 77KB (2,176 lines)
+- **index.html**: 83KB (2,359 lines)
 - **manifest.json**: 684B
 - **Version**: v3.6
 - **Backup**: `/mnt/aidrive/CONNECT_Acai_App/connect_acai_app_v3.6.zip`
