@@ -687,13 +687,154 @@
                 transform: translateY(-10px);
             }
         }
+
+        /* Quantity Selector Styles */
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin: 15px 0;
+        }
+
+        .quantity-btn {
+            width: 45px;
+            height: 45px;
+            border: 2px solid #8B5CF6;
+            background: white;
+            color: #8B5CF6;
+            border-radius: 10px;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            user-select: none;
+        }
+
+        .quantity-btn:hover {
+            background: #8B5CF6;
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .quantity-btn:active {
+            transform: scale(0.95);
+        }
+
+        .quantity-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .quantity-btn:disabled:hover {
+            background: white;
+            color: #8B5CF6;
+        }
+
+        .quantity-display {
+            min-width: 60px;
+            height: 45px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 10px;
+            font-size: 24px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+        }
+
+        .quantity-label {
+            text-align: center;
+            color: #6B7280;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        /* Amount Input Styles */
+        .amount-display {
+            background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            font-size: 32px;
+            font-weight: bold;
+            text-align: right;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+        }
+
+        /* Numpad Styles */
+        .numpad {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .numpad-btn {
+            background: white;
+            border: 2px solid #E5E7EB;
+            border-radius: 10px;
+            padding: 15px;
+            font-size: 24px;
+            font-weight: bold;
+            color: #1F2937;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+
+        .numpad-btn:hover {
+            background: #F3F4F6;
+            border-color: #8B5CF6;
+            transform: scale(1.05);
+        }
+
+        .numpad-btn:active {
+            transform: scale(0.95);
+        }
+
+        .numpad-btn.special {
+            background: #FEF3C7;
+            border-color: #F59E0B;
+            color: #92400E;
+        }
+
+        .numpad-btn.special:hover {
+            background: #FDE68A;
+        }
+
+        .numpad-btn.clear {
+            background: #FEE2E2;
+            border-color: #EF4444;
+            color: #991B1B;
+            grid-column: span 2;
+        }
+
+        .numpad-btn.clear:hover {
+            background: #FECACA;
+        }
+
+        .numpad-btn.zero {
+            grid-column: span 1;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
             <h1>CONNECT</h1>
-            <p>Customer Manager v3.3</p>
+            <p>Customer Manager v3.5</p>
             <div id="syncStatus" class="sync-status online">🔄 Synced</div>
         </div>
 
@@ -888,8 +1029,7 @@
             </div>
 
             <div class="btn-group">
-                <button class="btn" onclick="addStamp()">➕ Add Stamp</button>
-                <button class="btn btn-secondary" onclick="showAddVisitForm()">📝 Add Visit</button>
+                <button class="btn" onclick="showAddVisitForm()">📝 Add Visit</button>
             </div>
 
             <div id="addVisitForm" style="display: none; margin-top: 20px; padding-top: 20px; border-top: 2px solid #E5E7EB;">
@@ -899,8 +1039,32 @@
                     <input type="text" id="visitMenu" placeholder="e.g., Original Acai Bowl">
                 </div>
                 <div class="input-group">
-                    <label>Amount ($)</label>
-                    <input type="number" id="visitAmount" placeholder="0.00" step="0.01">
+                    <label class="quantity-label">Quantity (Stamps to Add)</label>
+                    <div class="quantity-selector">
+                        <button type="button" class="quantity-btn" id="decreaseQty" onclick="changeQuantity(-1)">−</button>
+                        <div class="quantity-display" id="quantityDisplay">1</div>
+                        <button type="button" class="quantity-btn" id="increaseQty" onclick="changeQuantity(1)">+</button>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Total Amount</label>
+                    <div class="amount-display" id="amountDisplay">$0.00</div>
+                    <div class="numpad">
+                        <button type="button" class="numpad-btn" onclick="numpadInput('1')">1</button>
+                        <button type="button" class="numpad-btn" onclick="numpadInput('2')">2</button>
+                        <button type="button" class="numpad-btn" onclick="numpadInput('3')">3</button>
+                        <button type="button" class="numpad-btn special" onclick="numpadBackspace()">⌫</button>
+                        <button type="button" class="numpad-btn" onclick="numpadInput('4')">4</button>
+                        <button type="button" class="numpad-btn" onclick="numpadInput('5')">5</button>
+                        <button type="button" class="numpad-btn" onclick="numpadInput('6')">6</button>
+                        <button type="button" class="numpad-btn special" onclick="numpadInput('.')">・</button>
+                        <button type="button" class="numpad-btn" onclick="numpadInput('7')">7</button>
+                        <button type="button" class="numpad-btn" onclick="numpadInput('8')">8</button>
+                        <button type="button" class="numpad-btn" onclick="numpadInput('9')">9</button>
+                        <button type="button" class="numpad-btn special" onclick="numpadInput('00')">00</button>
+                        <button type="button" class="numpad-btn clear" onclick="numpadClear()">Clear</button>
+                        <button type="button" class="numpad-btn zero" onclick="numpadInput('0')">0</button>
+                    </div>
                 </div>
                 <button class="btn" onclick="addVisit()">Save Visit</button>
             </div>
@@ -1362,49 +1526,123 @@
         };
 
         // Add stamp
-        window.addStamp = async function() {
-            if (window.currentCustomer.stamps >= 10) {
-                if (confirm('Customer has reached 10 stamps! Reset stamp card after redeeming reward?')) {
-                    window.currentCustomer.stamps = 0;
-                } else {
-                    return;
-                }
+        // Quantity management
+        let currentQuantity = 1;
+        const MIN_QUANTITY = 1;
+        const MAX_QUANTITY = 10;
+
+        // Amount management
+        let currentAmount = '0';
+
+        window.numpadInput = function(value) {
+            // Prevent multiple decimal points
+            if (value === '.' && currentAmount.includes('.')) {
+                return;
             }
 
-            window.currentCustomer.stamps++;
+            // Start fresh if current is '0'
+            if (currentAmount === '0' && value !== '.') {
+                currentAmount = value;
+            } else {
+                currentAmount += value;
+            }
+
+            // Limit to 999.99
+            const numValue = parseFloat(currentAmount);
+            if (numValue > 999.99) {
+                currentAmount = '999.99';
+            }
+
+            updateAmountDisplay();
+        };
+
+        window.numpadBackspace = function() {
+            if (currentAmount.length > 1) {
+                currentAmount = currentAmount.slice(0, -1);
+            } else {
+                currentAmount = '0';
+            }
+            updateAmountDisplay();
+        };
+
+        window.numpadClear = function() {
+            currentAmount = '0';
+            updateAmountDisplay();
+        };
+
+        function updateAmountDisplay() {
+            const display = document.getElementById('amountDisplay');
+            if (display) {
+                // Format display
+                const numValue = parseFloat(currentAmount);
+                if (isNaN(numValue)) {
+                    display.textContent = '$0.00';
+                } else {
+                    // Show raw input during entry
+                    display.textContent = '$' + currentAmount;
+                }
+            }
+        }
+
+        window.changeQuantity = function(delta) {
+            const newQuantity = currentQuantity + delta;
             
-            try {
-                const customerRef = doc(window.db, 'customers', window.currentCustomer.firestoreId);
-                await updateDoc(customerRef, {
-                    stamps: window.currentCustomer.stamps
-                });
-                
-                openCustomerDetail(window.currentCustomer.firestoreId);
-            } catch (error) {
-                console.error('Error updating stamp:', error);
-                alert('❌ Error updating stamp. Please try again.');
+            if (newQuantity >= MIN_QUANTITY && newQuantity <= MAX_QUANTITY) {
+                currentQuantity = newQuantity;
+                updateQuantityDisplay();
             }
         };
+
+        function updateQuantityDisplay() {
+            const display = document.getElementById('quantityDisplay');
+            const decreaseBtn = document.getElementById('decreaseQty');
+            const increaseBtn = document.getElementById('increaseQty');
+            
+            if (display) {
+                display.textContent = currentQuantity;
+            }
+            
+            // Disable buttons at limits
+            if (decreaseBtn) {
+                decreaseBtn.disabled = currentQuantity <= MIN_QUANTITY;
+            }
+            if (increaseBtn) {
+                increaseBtn.disabled = currentQuantity >= MAX_QUANTITY;
+            }
+        }
 
         // Show add visit form
         window.showAddVisitForm = function() {
             const form = document.getElementById('addVisitForm');
-            form.style.display = form.style.display === 'none' ? 'block' : 'none';
+            if (form.style.display === 'none') {
+                form.style.display = 'block';
+                // Reset quantity and amount when opening form
+                currentQuantity = 1;
+                currentAmount = '0';
+                updateQuantityDisplay();
+                updateAmountDisplay();
+            } else {
+                form.style.display = 'none';
+            }
         };
 
         // Add visit
         window.addVisit = async function() {
             const menu = document.getElementById('visitMenu').value.trim();
-            const amount = parseFloat(document.getElementById('visitAmount').value);
+            const amount = parseFloat(currentAmount);
+            const quantity = currentQuantity;
 
-            if (!menu || !amount) {
-                alert('Please fill in all fields');
+            if (!menu || !amount || amount <= 0) {
+                alert('Please fill in all fields with valid values');
                 return;
             }
 
+            // Add quantity info to menu if more than 1
+            const menuWithQty = quantity > 1 ? `${menu} x${quantity}` : menu;
+
             const visit = {
                 date: new Date().toISOString(),
-                menu: menu,
+                menu: menuWithQty,
                 amount: amount
             };
 
@@ -1413,13 +1651,26 @@
             // Save old stamp count for reward checking
             const oldStamps = window.currentCustomer.stamps;
             
-            // Also add a stamp
-            if (window.currentCustomer.stamps < 10) {
-                window.currentCustomer.stamps++;
-            } else {
-                if (confirm('Customer has 10 stamps! Reset stamp card?')) {
-                    window.currentCustomer.stamps = 1;
+            // Add stamps based on quantity
+            let stampsToAdd = quantity;
+            let newStamps = window.currentCustomer.stamps + stampsToAdd;
+            
+            // Handle 10 stamp limit with overflow
+            if (newStamps > 10) {
+                const overflow = newStamps - 10;
+                if (confirm(`Customer reached 10 stamps! Reset stamp card and add ${overflow} stamp${overflow > 1 ? 's' : ''}?`)) {
+                    window.currentCustomer.stamps = overflow;
+                } else {
+                    return;
                 }
+            } else if (newStamps === 10) {
+                if (confirm('Customer has 10 stamps! Reset stamp card?')) {
+                    window.currentCustomer.stamps = 0;
+                } else {
+                    window.currentCustomer.stamps = newStamps;
+                }
+            } else {
+                window.currentCustomer.stamps = newStamps;
             }
 
             try {
@@ -1430,8 +1681,9 @@
                 });
 
                 document.getElementById('visitMenu').value = '';
-                document.getElementById('visitAmount').value = '';
                 document.getElementById('addVisitForm').style.display = 'none';
+                currentQuantity = 1;
+                currentAmount = '0';
 
                 // Check for rewards BEFORE reopening customer detail
                 checkRewardEarned(oldStamps, window.currentCustomer.stamps);
@@ -1723,6 +1975,12 @@
         window.checkRewardEarned = checkRewardEarned;
         window.showRewardNotification = showRewardNotification;
         window.closeRewardNotification = closeRewardNotification;
+        window.changeQuantity = changeQuantity;
+        window.updateQuantityDisplay = updateQuantityDisplay;
+        window.numpadInput = numpadInput;
+        window.numpadBackspace = numpadBackspace;
+        window.numpadClear = numpadClear;
+        window.updateAmountDisplay = updateAmountDisplay;
     </script>
 
     <!-- Reward Notification Modal -->
